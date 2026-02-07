@@ -1,0 +1,186 @@
+﻿@* @model SaleViewModel
+@{
+    ViewData["Title"] = "Edit Sale";
+}
+
+<h2>Edit Sale</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@ViewBag.SaleId" />
+
+    <div class="form-group">
+        <label>Customer</label>
+        <select asp-for="CustomerId" asp-items="@(new SelectList(Model.Customers, "CustomerId", "Name", Model.CustomerId))" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Product</label>
+        <select asp-for="ProductId" asp-items="@(new SelectList(Model.Products, "ProductId", "Name", Model.ProductId))" class="form-control" id="productSelect"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Unit Price</label>
+        <input class="form-control" id="unitPrice" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Quantity</label>
+        <input asp-for="Quantity" class="form-control" id="quantity" type="number" value="@Model.Quantity" />
+    </div>
+
+    <div class="form-group">
+        <label>Total Price</label>
+        <input class="form-control" id="totalPrice" readonly />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var products = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Products));
+
+        function updateUnitPrice() {
+            var productId = $("#productSelect").val();
+            var product = products.find(p => p.ProductId == parseInt(productId));
+            if (product) {
+                $("#unitPrice").val(product.Price.toFixed(2));
+                updateTotalPrice();
+            } else {
+                $("#unitPrice").val('');
+                $("#totalPrice").val('');
+            }
+        }
+
+        function updateTotalPrice() {
+            var qty = parseInt($("#quantity").val()) || 0;
+            var price = parseFloat($("#unitPrice").val()) || 0;
+            $("#totalPrice").val((qty * price).toFixed(2));
+        }
+
+        $("#productSelect").change(updateUnitPrice);
+        $("#quantity").on("input", updateTotalPrice);
+
+        // initialize on page load
+        updateUnitPrice();
+    </script>
+} *@
+
+
+
+
+
+@model SaleViewModel
+
+@{
+    ViewData["Title"] = "Edit Sale";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0">Edit Sale</h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@ViewBag.SaleId" />
+
+                        <!-- Customer -->
+                        <div class="mb-3">
+                            <label asp-for="CustomerId" class="form-label">Customer</label>
+                            <select asp-for="CustomerId"
+                                    asp-items="@(new SelectList(Model.Customers, "CustomerId", "Name", Model.CustomerId))"
+                                    class="form-select">
+                            </select>
+                        </div>
+
+                        <!-- Product -->
+                        <div class="mb-3">
+                            <label asp-for="ProductId" class="form-label">Product</label>
+                            <select asp-for="ProductId"
+                                    asp-items="@(new SelectList(Model.Products, "ProductId", "Name", Model.ProductId))"
+                                    class="form-select"
+                                    id="productSelect">
+                            </select>
+                        </div>
+
+                        <!-- Unit Price -->
+                        <div class="mb-3">
+                            <label class="form-label">Unit Price</label>
+                            <input class="form-control text-end"
+                                   id="unitPrice"
+                                   readonly />
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="mb-3">
+                            <label asp-for="Quantity" class="form-label">Quantity</label>
+                            <input asp-for="Quantity"
+                                   class="form-control"
+                                   id="quantity"
+                                   type="number"
+                                   min="1" />
+                        </div>
+
+                        <!-- Total -->
+                        <div class="mb-4">
+                            <label class="form-label">Total Price</label>
+                            <input class="form-control fw-bold text-end"
+                                   id="totalPrice"
+                                   readonly />
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Update Sale
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var products = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Products));
+
+        function updateUnitPrice() {
+            var productId = $("#productSelect").val();
+            var product = products.find(p => p.ProductId == parseInt(productId));
+
+            if (product) {
+                $("#unitPrice").val(product.Price.toFixed(2));
+                updateTotalPrice();
+            } else {
+                $("#unitPrice").val('');
+                $("#totalPrice").val('');
+            }
+        }
+
+        function updateTotalPrice() {
+            var qty = parseInt($("#quantity").val()) || 0;
+            var price = parseFloat($("#unitPrice").val()) || 0;
+            $("#totalPrice").val((qty * price).toFixed(2));
+        }
+
+        $("#productSelect").on("change", updateUnitPrice);
+        $("#quantity").on("input", updateTotalPrice);
+
+        // Initialize on page load
+        updateUnitPrice();
+    </script>
+}

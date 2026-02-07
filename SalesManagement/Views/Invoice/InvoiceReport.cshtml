@@ -1,0 +1,109 @@
+﻿@* @model SalesManagement.Models.Invoice
+<div style="width:700px; font-family:Arial,sans-serif;">
+    <h2 style="text-align:center;">ABC Beauty Shop</h2>
+    <p style="text-align:center;">Dhaka, Bangladesh</p>
+    <hr />
+    <p>
+        Invoice #: @Model.InvoiceId <br />
+        Date: @Model.InvoiceDate.ToShortDateString() <br />
+        Customer: @Model.Customer.Name <br />
+        Email: @Model.Customer.Email
+    </p>
+    <table style="width:100%; border-collapse: collapse;" border="1">
+        <thead>
+            <tr style="background-color:#f2f2f2;">
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Total.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3 style="text-align:right;">Grand Total: @Model.GrandTotal.ToString("C")</h3>
+    <p style="text-align:center;">Thank you for shopping with us!</p>
+</div> *@
+
+
+
+
+@model SalesManagement.Models.Invoice
+
+<div style="width:700px; margin:0 auto; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333;">
+
+    <!-- Header -->
+    <div style="text-align:center; margin-bottom:20px;">
+        <h2 style="margin:0;">ABC Beauty Shop</h2>
+        <p style="margin:4px 0;">Dhaka, Bangladesh</p>
+        <hr />
+    </div>
+
+    <!-- Invoice Info -->
+    <table style="width:100%; margin-bottom:20px;">
+        <tr>
+            <td style="width:50%;">
+                <strong>Invoice #:</strong> @Model.InvoiceId <br />
+                <strong>Date:</strong> @Model.InvoiceDate.ToString("dd MMM yyyy")
+            </td>
+            <td style="width:50%; text-align:right;">
+                <strong>Customer:</strong> @Model.Customer.Name <br />
+                <strong>Email:</strong> @Model.Customer.Email
+            </td>
+        </tr>
+    </table>
+
+    <!-- Items -->
+    <table style="width:100%; border-collapse:collapse;" border="1" cellpadding="6">
+        <thead>
+            <tr style="background-color:#f5f5f5;">
+                <th align="left">Product</th>
+                <th align="right">Unit Price</th>
+                <th align="center">Qty</th>
+                <th align="right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td align="right">@item.Price.ToString("C")</td>
+                    <td align="center">@item.Quantity</td>
+                    <td align="right">@item.Total.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Summary -->
+    <table style="width:100%; margin-top:15px;">
+        <tr>
+            <td style="width:70%;"></td>
+            <td style="width:30%;">
+                <table style="width:100%; border-collapse:collapse;" border="1" cellpadding="6">
+                    <tr style="background-color:#f5f5f5;">
+                        <th align="left">Grand Total</th>
+                        <th align="right">@Model.GrandTotal.ToString("C")</th>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <p style="text-align:center; margin-top:30px; font-size:13px;">
+        Thank you for shopping with us! <br />
+        <span style="color:#777;">We appreciate your business.</span>
+    </p>
+
+</div>

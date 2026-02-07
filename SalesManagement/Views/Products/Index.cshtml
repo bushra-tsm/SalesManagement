@@ -1,0 +1,146 @@
+﻿@* @model IEnumerable<SalesManagement.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SkinType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SkinType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+                <td>
+                    @if (item.ExpiryDate < DateTime.Now.AddMonths(1))
+                    {
+                        <span class="text-danger">@item.ExpiryDate.ToShortDateString()</span>
+                    }
+                    else
+                    {
+                        @item.ExpiryDate.ToShortDateString()
+                    }
+                </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+
+
+@model IEnumerable<SalesManagement.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Products</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Create New Product</a>
+    </p>
+
+    <table class="table table-striped table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.First().Name)</th>
+                <th>@Html.DisplayNameFor(m => m.First().Brand)</th>
+                <th>@Html.DisplayNameFor(m => m.First().Category)</th>
+                <th>@Html.DisplayNameFor(m => m.First().SkinType)</th>
+                <th class="text-end">@Html.DisplayNameFor(m => m.First().Price)</th>
+                <th class="text-center">@Html.DisplayNameFor(m => m.First().Stock)</th>
+                <th>@Html.DisplayNameFor(m => m.First().ExpiryDate)</th>
+                <th class="text-center" style="width: 180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => item.Name)</td>
+                    <td>@Html.DisplayFor(m => item.Brand)</td>
+                    <td>@Html.DisplayFor(m => item.Category)</td>
+                    <td>@Html.DisplayFor(m => item.SkinType)</td>
+                    <td class="text-end">@item.Price.ToString("C")</td>
+                    <td class="text-center">@Html.DisplayFor(m => item.Stock)</td>
+                    <td>
+                        @if (item.ExpiryDate < DateTime.Now.AddMonths(1))
+                        {
+                            <span class="text-danger fw-bold" title="Expiring soon!">@item.ExpiryDate.ToShortDateString()</span>
+                        }
+                        else
+                        {
+                            @item.ExpiryDate.ToShortDateString()
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm me-1" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-info btn-sm me-1" title="Details">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-danger btn-sm" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

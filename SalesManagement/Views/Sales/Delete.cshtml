@@ -1,0 +1,70 @@
+﻿@* @model SalesManagement.Models.Sale
+
+<h2>Delete Sale</h2>
+
+<p>Are you sure you want to delete this sale?</p>
+
+<p>
+    <strong>Customer:</strong> @Model.Customer.Name <br />
+    <strong>Date:</strong> @Model.SaleDate.ToString("dd/MM/yyyy") <br />
+    <strong>Total:</strong> @Model.TotalAmount.ToString("C")
+</p>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.SaleId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form> *@
+
+
+
+@model SalesManagement.Models.Sale
+
+@{
+    ViewData["Title"] = "Delete Sale";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Confirm Delete</h5>
+                </div>
+
+                <div class="card-body">
+                    <p class="mb-3">
+                        Are you sure you want to delete the following sale?
+                        <span class="text-danger fw-semibold">This action cannot be undone.</span>
+                    </p>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Customer</dt>
+                        <dd class="col-sm-8">@Model.Customer.Name</dd>
+
+                        <dt class="col-sm-4">Sale Date</dt>
+                        <dd class="col-sm-8">@Model.SaleDate.ToString("dd MMM yyyy")</dd>
+
+                        <dt class="col-sm-4">Total Amount</dt>
+                        <dd class="col-sm-8 fw-bold">
+                            @Model.TotalAmount.ToString("C")
+                        </dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post" class="d-flex justify-content-end gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.SaleId" />
+
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            Delete Sale
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

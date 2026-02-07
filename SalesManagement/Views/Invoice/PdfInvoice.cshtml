@@ -1,0 +1,190 @@
+﻿@* @model Invoice
+
+<style>
+    body {
+        font-family: Arial;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+    }
+
+    .header {
+        text-align: center;
+    }
+</style>
+
+<div class="header">
+    <h2>ABC Beauty Shop</h2>
+    <p>Dhaka, Bangladesh</p>
+</div>
+
+<hr />
+
+<p>
+    Invoice #: @Model.InvoiceId <br />
+    Date: @Model.InvoiceDate.ToShortDateString() <br />
+    Customer: @Model.Customer.Name <br />
+    Email: @Model.Customer.Email
+</p>
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+    </tr>
+
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item.Product.Name</td>
+            <td>@item.Price</td>
+            <td>@item.Quantity</td>
+            <td>@item.Total</td>
+        </tr>
+    }
+</table>
+
+<h3 style="text-align:right">
+    Grand Total: ৳ @Model.GrandTotal
+</h3>
+
+<p style="text-align:center">
+    Thank you for shopping with us!
+</p> *@
+
+
+
+
+@model Invoice
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #000;
+    }
+
+    .container {
+        width: 700px;
+        margin: 0 auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .summary {
+        margin-top: 15px;
+    }
+
+    .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 13px;
+    }
+</style>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h2 style="margin-bottom:5px;">ABC Beauty Shop</h2>
+        <p style="margin-top:0;">Dhaka, Bangladesh</p>
+    </div>
+
+    <hr />
+
+    <!-- Invoice Info -->
+    <table style="border:none;">
+        <tr>
+            <td style="border:none; width:50%;">
+                <strong>Invoice #:</strong> @Model.InvoiceId <br />
+                <strong>Date:</strong> @Model.InvoiceDate.ToString("dd MMM yyyy")
+            </td>
+            <td style="border:none; width:50%;" class="text-right">
+                <strong>Customer:</strong> @Model.Customer.Name <br />
+                <strong>Email:</strong> @Model.Customer.Email
+            </td>
+        </tr>
+    </table>
+
+    <!-- Items -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th class="text-right">Unit Price</th>
+                <th class="text-center">Qty</th>
+                <th class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td class="text-right">@item.Price.ToString("C")</td>
+                    <td class="text-center">@item.Quantity</td>
+                    <td class="text-right">@item.Total.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Grand Total -->
+    <table class="summary">
+        <tr>
+            <td style="border:none;"></td>
+            <td style="width:30%;">
+                <table>
+                    <tr>
+                        <th>Grand Total</th>
+                        <th class="text-right">
+                            ৳ @Model.GrandTotal.ToString("N2")
+                        </th>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Thank you for shopping with us!</p>
+    </div>
+
+</div>

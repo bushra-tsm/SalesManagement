@@ -1,0 +1,254 @@
+﻿@* @model InvoiceVM
+<h2>Create Invoice</h2>
+
+<form asp-action="Create" method="post">
+
+    <select id="customer" asp-for="CustomerId" asp-items="Model.Customers" class="form-control"></select>
+    <input id="email" class="form-control" readonly placeholder="Email" />
+
+    <table class="table" id="items">
+        <thead>
+            <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button type="button" onclick="addRow()" class="btn btn-success">Add Item</button>
+    <h3>Grand Total: <span id="grand">0</span></h3>
+
+    <button type="submit" class="btn btn-primary">Save Invoice</button>
+</form>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    let index = 0;
+
+    function addRow() {
+        let row = `
+    <tr>
+    <td>
+    <select name="ProductIds[${index}]" class="product form-control"></select>
+    </td>
+    <td><input class="price form-control" readonly></td>
+    <td><input name="Quantities[${index}]" class="qty form-control"></td>
+    <td><input class="total form-control" readonly></td>
+    <td><button type="button" onclick="$(this).closest('tr').remove(); calcGrand()">X</button></td>
+    </tr>`;
+        $("#items tbody").append(row);
+
+        let productList = @Html.Raw(Json.Serialize(Model.Products));
+        let ddl = $(".product").last();
+        ddl.append(`<option value="">Select</option>`);
+        productList.forEach(p => {
+            ddl.append(`<option value="${p.value}">${p.text}</option>`);
+        });
+
+        index++;
+    }
+
+    $(document).on("change", ".product", function () {
+        let row = $(this).closest("tr");
+        let id = $(this).val();
+        $.get("/Invoice/GetProductPrice?id=" + id, function (data) {
+            row.find(".price").val(data);
+        });
+    });
+
+    $(document).on("keyup", ".qty", function () {
+        let row = $(this).closest("tr");
+        let price = row.find(".price").val();
+        let qty = $(this).val();
+        row.find(".total").val(price * qty);
+        calcGrand();
+    });
+
+    function calcGrand() {
+        let sum = 0;
+        $(".total").each(function () {
+            sum += parseFloat($(this).val()) || 0;
+        });
+        $("#grand").text(sum);
+    }
+
+    $("#customer").change(function () {
+        $.get("/Invoice/GetCustomerEmail?id=" + $(this).val(), function (data) {
+            $("#email").val(data);
+        });
+    });
+</script> *@
+
+
+
+
+
+
+@model InvoiceVM
+
+@{
+    ViewData["Title"] = "Create Invoice";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0">Create Invoice</h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+
+                        <!-- Customer -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Customer</label>
+                                <select id="customer"
+                                        asp-for="CustomerId"
+                                        asp-items="Model.Customers"
+                                        class="form-select">
+                                    <option value="">-- Select Customer --</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input id="email"
+                                       class="form-control"
+                                       readonly
+                                       placeholder="Customer email" />
+                            </div>
+                        </div>
+
+                        <!-- Items -->
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered align-middle" id="items">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 35%">Product</th>
+                                        <th class="text-end">Price</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-end">Total</th>
+                                        <th class="text-center" style="width: 50px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <button type="button"
+                                    onclick="addRow()"
+                                    class="btn btn-outline-success">
+                                + Add Item
+                            </button>
+
+                            <h5 class="mb-0">
+                                Grand Total:
+                                <span class="fw-bold text-primary" id="grand">0.00</span>
+                            </h5>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                Save Invoice
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    let index = 0;
+    let productList = @Html.Raw(Json.Serialize(Model.Products));
+
+    function addRow() {
+        let row = `
+        <tr>
+            <td>
+                <select name="ProductIds[${index}]" class="product form-select">
+                    <option value="">Select product</option>
+                </select>
+            </td>
+            <td>
+                <input class="price form-control text-end" readonly />
+            </td>
+            <td>
+                <input name="Quantities[${index}]" class="qty form-control text-center" type="number" min="1" value="1" />
+            </td>
+            <td>
+                <input class="total form-control text-end fw-semibold" readonly />
+            </td>
+            <td class="text-center">
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="$(this).closest('tr').remove(); calcGrand();">
+                    ✕
+                </button>
+            </td>
+        </tr>`;
+
+        $("#items tbody").append(row);
+
+        let ddl = $(".product").last();
+        productList.forEach(p => {
+            ddl.append(`<option value="${p.value}">${p.text}</option>`);
+        });
+
+        index++;
+    }
+
+    $(document).on("change", ".product", function () {
+        let row = $(this).closest("tr");
+        let id = $(this).val();
+
+        if (!id) return;
+
+        $.get("/Invoice/GetProductPrice?id=" + id, function (data) {
+            row.find(".price").val(parseFloat(data).toFixed(2));
+            row.find(".qty").trigger("input");
+        });
+    });
+
+    $(document).on("input", ".qty", function () {
+        let row = $(this).closest("tr");
+        let price = parseFloat(row.find(".price").val()) || 0;
+        let qty = parseInt($(this).val()) || 0;
+
+        row.find(".total").val((price * qty).toFixed(2));
+        calcGrand();
+    });
+
+    function calcGrand() {
+        let sum = 0;
+        $(".total").each(function () {
+            sum += parseFloat($(this).val()) || 0;
+        });
+        $("#grand").text(sum.toFixed(2));
+    }
+
+    $("#customer").change(function () {
+        let id = $(this).val();
+        if (!id) {
+            $("#email").val('');
+            return;
+        }
+
+        $.get("/Invoice/GetCustomerEmail?id=" + id, function (data) {
+            $("#email").val(data);
+        });
+    });
+</script>

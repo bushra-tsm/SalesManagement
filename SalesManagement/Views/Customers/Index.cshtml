@@ -1,0 +1,104 @@
+﻿@* @model IEnumerable<SalesManagement.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SkinType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SkinType)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+
+
+
+@model IEnumerable<SalesManagement.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Customers</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Create New Customer</a>
+    </p>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Phone)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                <th>@Html.DisplayNameFor(model => model.First().SkinType)</th>
+                <th class="text-center" style="width: 180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => item.Name)</td>
+                    <td>@Html.DisplayFor(m => item.Phone)</td>
+                    <td>@Html.DisplayFor(m => item.Email)</td>
+                    <td>@Html.DisplayFor(m => item.SkinType)</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.CustomerId" class="btn btn-primary btn-sm me-1" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.CustomerId" class="btn btn-info btn-sm me-1" title="Details">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.CustomerId" class="btn btn-danger btn-sm" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

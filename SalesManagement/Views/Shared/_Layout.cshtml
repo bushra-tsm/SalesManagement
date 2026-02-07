@@ -1,0 +1,309 @@
+﻿@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SalesManagement</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SalesManagement.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SalesManagement</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                       
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("SalesRep"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Sales" asp-action="Index">SalesManagement</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Invoice" asp-action="Create">Invoice</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">CustomersManagement</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">ProductsManagement</a>
+                                </li>
+                            }
+                        } 
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - SalesManagement - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+ *@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SalesManagement</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SalesManagement.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            overflow-x: hidden;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 220px;
+            min-height: 100vh;
+            background: #343a40;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+            #sidebar .sidebar-header {
+                padding: 1rem;
+                background: #212529;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            #sidebar ul.components {
+                padding: 0;
+            }
+
+            #sidebar ul li {
+                padding: 0.5rem 1rem;
+                list-style: none;
+            }
+
+                #sidebar ul li a {
+                    color: #adb5bd;
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    transition: all 0.2s;
+                }
+
+                    #sidebar ul li a i {
+                        width: 20px;
+                        margin-right: 10px;
+                        text-align: center;
+                    }
+
+                    #sidebar ul li a.active,
+                    #sidebar ul li a:hover {
+                        color: #fff;
+                        background: #495057;
+                    }
+
+        
+
+        /* Top navbar */
+        /* Top navbar */
+        .navbar-custom {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 0.4rem 1rem;
+            position: fixed;
+            top: 0;
+            left: 220px; /* sidebar width */
+            right: 0;
+            height: 56px;
+            z-index: 999;
+        }
+
+        #content {
+            margin-left: 220px;
+            padding-top: 56px; /* navbar height */
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        #sidebar.active ~ #content .navbar-custom {
+            left: 0;
+        }
+
+        /* Sidebar toggle button */
+        #sidebarCollapse {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #343a40;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 0.75rem;
+            background: #fff;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            #sidebar
+
+        {
+            margin-left: -220px;
+        }
+
+        #sidebar.active {
+                    margin-left: -220px;
+        }
+
+        #content {
+            margin-left: 0;
+        }
+
+        .navbar-custom {
+            left: 0;
+        }
+
+        }
+
+
+        /* Card styling for dashboard */
+        .card-dashboard {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border-radius: 0.5rem;
+        }
+
+    </style>
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-cubes"></i> SalesManagement
+            </div>
+            <ul class="components">
+                @if (User.IsInRole("SalesRep"))
+                {
+                    <li>
+                        <a asp-controller="Sales" asp-action="Index"
+                           class="@(ViewData["Title"]?.ToString() == "SalesManagement" ? "active" : "")">
+                            <i class="fas fa-chart-line"></i> SalesManagement
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Invoice" asp-action="Create"
+                           class="@(ViewData["Title"]?.ToString() == "Invoice" ? "active" : "")">
+                            <i class="fas fa-file-invoice-dollar"></i> Invoice
+                        </a>
+                    </li>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-controller="Customers" asp-action="Index"
+                           class="@(ViewData["Title"]?.ToString() == "CustomersManagement" ? "active" : "")">
+                            <i class="fas fa-users"></i> CustomersManagement
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Products" asp-action="Index"
+                           class="@(ViewData["Title"]?.ToString() == "ProductsManagement" ? "active" : "")">
+                            <i class="fas fa-boxes"></i> ProductsManagement
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+
+    <!-- Page Content -->
+    <div id="content">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-custom mb-0">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="ms-auto">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    @* <footer>
+        &copy; 2026 - SalesManagement - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </footer> *@
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
