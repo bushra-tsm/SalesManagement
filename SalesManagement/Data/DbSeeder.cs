@@ -18,22 +18,22 @@ namespace SalesManagement.Data
 
 
 
-            // creating admin
-            //var user = new ApplicationUser
-            //{
+            //creating admin
+            var user = new ApplicationUser
+            {
 
-            //    FirstName = "Bushra",
-            //    LastName = "Tabassum",
-            //    Email = "bushra@gmail.com",
-            //    EmailConfirmed = true,
-            //    PhoneNumberConfirmed = true,
-            //};
-            //var userInDb = await userManager.FindByEmailAsync(user.Email);
-            //if (userInDb == null)
-            //{
-            //    await userManager.CreateAsync(user, "Bushra@123");
-            //    await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-            //}
+                FirstName = "Bushra",
+                LastName = "Tabassum",
+                Email = "bushra@gmail.com",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+            };
+            var userInDb = await userManager.FindByEmailAsync(user.Email);
+            if (userInDb == null)
+            {
+                await userManager.CreateAsync(user, "Bushra@123");
+                await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+            }
         }
     }
 }
